@@ -9,14 +9,16 @@ const LIMIT = 10;
 export default function ProductsPage() {
   const [data, setData] = useState<Page<Product> | null>(null);
   const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async (targetPage: number) => {
+  const load = useCallback(async (targetPage: number, term: string) => {
     setLoading(true);
     setError(null);
     try {
-      const result = await api.listProducts(targetPage, LIMIT);
+      const result = await api.listProducts(targetPage, LIMIT, term);
       setData(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao carregar');
@@ -26,14 +28,22 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    load(page);
-  }, [page, load]);
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  useEffect(() => {
+    load(page, search);
+  }, [page, search, load]);
 
   async function handleDelete(id: string) {
     if (!confirm('Remover este produto?')) return;
     try {
       await api.deleteProduct(id);
-      await load(page);
+      await load(page, search);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao remover');
     }
@@ -52,11 +62,25 @@ export default function ProductsPage() {
 
       {error && <div className="alert">{error}</div>}
 
+      <div className="field">
+        <label htmlFor="search">Filtrar</label>
+        <input
+          id="search"
+          placeholder="Buscar por nome ou codigo"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+      </div>
+
       <div className="card">
         {loading ? (
           <p className="muted">Carregando...</p>
         ) : !data || data.items.length === 0 ? (
-          <p className="muted">Nenhum produto cadastrado.</p>
+          <p className="muted">
+            {search
+              ? 'Nenhum produto encontrado.'
+              : 'Nenhum produto cadastrado.'}
+          </p>
         ) : (
           <table>
             <thead>

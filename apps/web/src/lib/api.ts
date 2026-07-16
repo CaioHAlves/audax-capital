@@ -43,8 +43,16 @@ async function parse<T>(response: Response): Promise<T> {
 }
 
 export const api = {
-  listProducts(page = 1, limit = 10): Promise<Page<Product>> {
-    return fetch(`${BASE_URL}/products?page=${page}&limit=${limit}`, {
+  listProducts(page = 1, limit = 10, search = ''): Promise<Page<Product>> {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
+    if (search.trim()) {
+      params.set('search', search.trim());
+    }
+
+    return fetch(`${BASE_URL}/products?${params.toString()}`, {
       cache: 'no-store',
     }).then((res) => parse<Page<Product>>(res));
   },
