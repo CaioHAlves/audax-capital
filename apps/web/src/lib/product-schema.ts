@@ -1,8 +1,14 @@
 import { z } from 'zod';
 
-const price = z.coerce
-  .number({ invalid_type_error: 'Preco deve ser um numero' })
-  .positive('Preco deve ser maior que zero');
+const price = z
+  .string({ invalid_type_error: 'Preco deve ser um numero' })
+  .trim()
+  .transform((value) => value.replace(',', '.'))
+  .refine((value) => /^\d+(\.\d{1,2})?$/.test(value), {
+    message: 'Preco deve ter no maximo duas casas decimais',
+  })
+  .transform(Number)
+  .refine((value) => value > 0, 'Preco deve ser maior que zero');
 
 const stock = z.coerce
   .number({ invalid_type_error: 'Estoque deve ser um numero' })
