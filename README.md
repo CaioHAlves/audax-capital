@@ -24,7 +24,8 @@ Next.js (App Router).
 - **SKU imutável** após a criação.
 - **SKU** com formato validado (`^[A-Z0-9-]{3,32}$`, normalizado em maiúsculas).
 - **Preço** sempre positivo (armazenado em centavos para evitar erros de ponto
-  flutuante).
+  flutuante). No formulário do front, aceita vírgula ou ponto e no máximo duas
+  casas decimais (ex.: `20,13` ou `21.13`).
 - **Estoque** inteiro e não negativo.
 
 O detalhamento do domínio está em [`CONTEXT.md`](./CONTEXT.md).
@@ -125,8 +126,9 @@ Base: `http://localhost:3000/api`
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
+| `GET` | `/health` | Status da API (healthcheck) |
 | `POST` | `/products` | Cria um produto |
-| `GET` | `/products?page=1&limit=10` | Lista paginada |
+| `GET` | `/products?page=1&limit=10&search=` | Lista paginada; `search` filtra por nome ou SKU (opcional, case-insensitive) |
 | `GET` | `/products/:id` | Busca por id |
 | `PUT` | `/products/:id` | Atualiza nome, preço e estoque |
 | `DELETE` | `/products/:id` | Remove |

@@ -51,7 +51,8 @@ Campos:
 ## Casos de uso
 
 - **Criar produto** — valida invariantes, garante SKU único, persiste.
-- **Listar produtos** — paginado (`page`, `limit`), retorna itens e total.
+- **Listar produtos** — paginado (`page`, `limit`), com filtro opcional
+  (`search`) por nome ou SKU (case-insensitive); retorna itens e total.
 - **Buscar produto por id** — retorna o produto ou erro de não encontrado.
 - **Atualizar produto** — altera `name`, `price` e `stock`. O SKU não muda.
 - **Remover produto** — remove do catálogo.
