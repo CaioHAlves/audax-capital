@@ -52,4 +52,8 @@ export class ListProductsQueryDto {
   @IsInt()
   @Min(1)
   limit?: number;
+
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

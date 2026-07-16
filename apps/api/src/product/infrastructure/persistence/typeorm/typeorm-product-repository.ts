@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Product } from '../../../domain/product';
 import { Sku } from '../../../domain/sku';
 import {
@@ -29,7 +29,15 @@ export class TypeOrmProductRepository implements ProductRepository {
   }
 
   async list(query: PageQuery): Promise<Page<Product>> {
+    const where = query.search
+      ? [
+          { name: ILike(`%${query.search}%`) },
+          { sku: ILike(`%${query.search}%`) },
+        ]
+      : undefined;
+
     const [entities, total] = await this.repository.findAndCount({
+      where,
       order: { createdAt: 'DESC' },
       skip: (query.page - 1) * query.limit,
       take: query.limit,

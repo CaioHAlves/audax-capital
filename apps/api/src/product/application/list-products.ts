@@ -14,8 +14,9 @@ export class ListProducts {
   async execute(query: Partial<PageQuery>): Promise<Page<ProductDto>> {
     const page = normalize(query.page, 1);
     const limit = Math.min(normalize(query.limit, DEFAULT_LIMIT), MAX_LIMIT);
+    const search = query.search?.trim() || undefined;
 
-    const result = await this.repository.list({ page, limit });
+    const result = await this.repository.list({ page, limit, search });
 
     return {
       items: result.items.map(toProductDto),

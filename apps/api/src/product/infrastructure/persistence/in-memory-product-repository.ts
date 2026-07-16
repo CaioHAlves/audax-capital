@@ -28,9 +28,16 @@ export class InMemoryProductRepository implements ProductRepository {
   }
 
   async list(query: PageQuery): Promise<Page<Product>> {
-    const all = [...this.products.values()].sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
-    );
+    const term = query.search?.toLowerCase();
+    const all = [...this.products.values()]
+      .filter((product) => {
+        if (!term) return true;
+        return (
+          product.name.toLowerCase().includes(term) ||
+          product.sku.value.toLowerCase().includes(term)
+        );
+      })
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     const start = (query.page - 1) * query.limit;
     const items = all.slice(start, start + query.limit);
 
