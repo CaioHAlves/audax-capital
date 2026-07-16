@@ -4,6 +4,7 @@ import { Sku } from './sku';
 export interface PageQuery {
   page: number;
   limit: number;
+  search?: string;
 }
 
 export interface Page<T> {

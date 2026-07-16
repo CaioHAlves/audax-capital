@@ -52,4 +52,24 @@ describe('ListProducts', () => {
     expect(result.page).toBe(1);
     expect(result.limit).toBeGreaterThan(0);
   });
+
+  it('filtra por nome', async () => {
+    const result = await list.execute({ search: 'Produto 2' });
+
+    expect(result.total).toBe(1);
+    expect(result.items[0].name).toBe('Produto 2');
+  });
+
+  it('filtra por codigo ignorando maiusculas', async () => {
+    const result = await list.execute({ search: 'sku-3' });
+
+    expect(result.total).toBe(1);
+    expect(result.items[0].sku).toBe('SKU-3');
+  });
+
+  it('ignora espacos em branco no filtro', async () => {
+    const result = await list.execute({ search: '   ' });
+
+    expect(result.total).toBe(3);
+  });
 });
