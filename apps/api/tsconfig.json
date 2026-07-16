@@ -6,6 +6,7 @@
     "baseUrl": "./",
     "sourceMap": true,
     "incremental": true,
+    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo",
     "types": ["node", "jest"]
   },
   "include": ["src/**/*.ts"],
