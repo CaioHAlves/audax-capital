@@ -6,6 +6,7 @@ import {
   RepositoryDriver,
 } from './product/infrastructure/product.module';
 import { ProductOrmEntity } from './product/infrastructure/persistence/typeorm/product.orm-entity';
+import { HealthModule } from './health/health.module';
 
 @Module({})
 export class AppModule {
@@ -13,6 +14,7 @@ export class AppModule {
     const driver = (process.env.DB_DRIVER ?? 'memory') as RepositoryDriver;
     const imports: DynamicModule['imports'] = [
       ConfigModule.forRoot({ isGlobal: true }),
+      HealthModule,
     ];
 
     if (driver === 'postgres') {
