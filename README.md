@@ -187,6 +187,32 @@ em fatias verticais (`test:` seguido de `feat:`). Ver
 **Trade-off:** duas ferramentas de teste no monorepo, cada app rodando a sua;
 em troca, cada lado usa a ferramenta mais natural do seu ecossistema.
 
+### Filtro de busca na listagem
+
+Um único parâmetro `search` casa com nome OU SKU (_case-insensitive_). O
+contrato fica na porta (`PageQuery.search`) e cada adapter implementa o filtro
+na sua tecnologia (`includes` no in-memory, `ILike` no Postgres). Ver
+[ADR 0006](./docs/adr/0006-filtro-de-busca-na-listagem.md).
+
+**Trade-off:** busca por substring, não _full-text_ — suficiente para o escopo.
+
+### Healthcheck
+
+`GET /health` retorna liveness (`status`, `uptime`, `timestamp`) em um módulo
+isolado, sem `@nestjs/terminus`. Ver
+[ADR 0007](./docs/adr/0007-endpoint-de-healthcheck.md).
+
+**Trade-off:** é _liveness_, não _readiness_ (não checa o banco).
+
+### Entrada de preço no formulário
+
+O preço aceita vírgula ou ponto e no máximo duas casas; a normalização vive no
+schema Zod do frontend, e o domínio recebe um `number` já válido. Ver
+[ADR 0008](./docs/adr/0008-entrada-de-preco-no-formulario.md).
+
+**Trade-off:** formatação de digitação no front, invariante de valor no
+domínio — dois pontos com propósitos distintos.
+
 ## Documentação de design
 
 - [`CONTEXT.md`](./CONTEXT.md) — contexto, linguagem ubíqua e regras de negócio.
